@@ -7,14 +7,9 @@ Le projet k8s-wordsmith-demo est découpé en 3 parties :
 - db : BDD PostgreSQL qui contient les mots à afficher
 
 Le but de ces exercices est de « containeriser » cette application.
-Cela se fait en trois étapes :
-
-- écriture des Dockerfiles, afin de construire les images des containers
-- écriture du Compose file, afin de faire tourner l'application en dev
-- déploiement sur Kubernetes
 
 
-## Exercice 1 : Dockerfiles
+## Exercice 1 : Écriture de Dockerfiles
 
 Le but de l'exercice est d'écrire les Dockerfiles pour les 3 containers.
 
@@ -169,7 +164,27 @@ Informations supplémentaires :
 - il est conseillé de protéger l'accès à la base avec un mot de passe, mais dans le cas présent, on acceptera de se simplifier la vie en autorisant toutes les connexions (en positionnant la variable `POSTGRES_HOST_AUTH_METHOD=trust`)
 
 
-## Exercice 2 : Compose file
+## Exercice 2 : Optimisation de la taille des images
+
+On souhaite maintenant optimiser la taille des images.
+
+Pour cela, on pourra utiliser notamment des _multi-stage builds_, ou encore s'appuyer sur des images basées sur Alpine.
+
+Voici quelques objectifs indicatifs :
+
+- pour l'image `web`, on considérera qu'une image de 100 Mo est un bon résultat, et qu'une image de 10 Mo est un très bon résultat ;
+- pour l'image `words`, on considérera qu'une image de 200 Mo est un bon résultat, et qu'une image de 50 Mo est un très bon résultat ;
+- pour l'image `db`, on considérera qu'une image de 300 Mo est un bon résultat.
+
+
+## Exercice 3 : Optimisation du temps de *build* des images
+
+On souhaite maintenant s'assurer que la construction des images est rapide en cas de modification du code dans les images `web` et `words`. Pour tester des modifications de code, même si vous ne connaissez pas Go ou Java, vous pouvez simplement modifier le message qui s'affiche au lancement du serveur.
+
+On souhaite que la construction dure moins de dix secondes après modification de code.
+
+
+## Exercice 4 : Écriture de fichier Compose
 
 Une fois que les trois images se construisent correctement, vous pouvez
 passer à l'écriture du Compose file. Nous conseillons de placer le Compose
@@ -181,7 +196,17 @@ entre eux, et que l'on peut se connecter à `web` de l'extérieur.
 Note : seul le service `web` doit être accessible de l'extérieur.
 
 
-## Exercice 3 : Kubernetes
+## Exercice 5 : Compose pour le développement itératif
+
+On souhaite maintenant modifier le fichier Compose afin de pouvoir éditer les fichiers HTML ou CSS du service `web` (dans le répertoire `static`) sans avoir à reconstruire et relancer le container à chaque modification.
+
+
+## Exercice 6: Déployer plusieurs *stacks* avec Compose
+
+On souhaite maintenant pouvoir déployer l'application wordsmith en plusieurs exemplaires sur la même machine, avec un minimum d'effort. Idéalement, pour déployer une nouvelle instance de l'application, il faudrait créer un fichier de quelques lignes et lancer une commande `docker compose up`.
+
+
+## Exercice 7 : Kubernetes
 
 On veut maintenant déployer wordsmith sur Kubernetes, de manière à ce qu'on puisse se connecter à l'interface web depuis l'extérieur.
 

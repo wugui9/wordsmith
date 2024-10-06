@@ -9,14 +9,8 @@ The wordsmith project is split into 3 parts:
 
 Our goal is to containerize this application.
 
-There will be 3 steps:
 
-1. Write multiple Dockerfiles. to build container images.
-2. Write a Compose file, to run the app locally.
-3. Deploy on Kubernetes.
-
-
-## Exercise 1: Dockerfiles
+## Exercise 1: Writing Dockerfiles
 
 Our goal is to write Dockerfiles for the 3 containers.
 
@@ -175,7 +169,28 @@ Additional information:
   is particularly useful to understand how to load `words.sql`
 - it is advised to set up password authentication for the database; but in this case, to make our lives easier, we will simply authorize all connections (by setting environment variable `POSTGRES_HOST_AUTH_METHOD=trust`)
 
-## Exercise 2: Compose file
+
+## Exercise 2: Optimizing image size
+
+Now, we want to optimize image size.
+
+We can use multi-stage builds, or leverage images based on Alpine.
+
+Here are some targets:
+
+- for `web`, 100 MB is a good result, andd 10 MB is a very good result;
+- for `words`, 200 MB is a good result, and 50 MB is a very good result;
+- for `db`, 300 MB is a good result.
+
+
+## Exercise 3: Optimizing build time
+
+We want to ensure that for `web` and `words`, build time remains short when we edit the code. To test code changes, even if you don't know Go or Java, you can update the message that is printed when the server starts.
+
+Our target is to make sure that image build time remains below 10 seconds.
+
+
+## Exercise 4: Writing a Compose file
 
 When the 3 images build correctly, we can move on and write the Compose
 file. We suggest placing the Compose file at the root of the repository.
@@ -186,7 +201,17 @@ together, and that we can connect to `web`.
 Note: the `web` service should be exposed.
 
 
-## Exercise 3: Kubernetes
+## Exercise 5: Compose in dev mode
+
+We want to tweak the Compose file so that it's possible to edit HTML and CSS files in `web` (in the `static` directory) without having to rebuild and restart the container after each change.
+
+
+## Exercise 6: Deploying multiple stacks with Compose
+
+Now we want to deploy the wordsmith app multiple times side-by-side on the same machine, with minimal effort. Specifically, deploying a new instance of the app should only require to create a new file of a few lines, and a standard `docker compose up` invocation.
+
+
+## Exercise 7: Kubernetes
 
 We want to deploy wordsmith on Kubernetes, and connect to the web interface from the outside.
 
