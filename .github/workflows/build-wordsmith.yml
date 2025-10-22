@@ -14,13 +14,13 @@ jobs:
         include:
           - name: db
             context: ./db
-            tag: serious/wordsmith:db
+            tag: wugui9/wordsmith-db
           - name: words
             context: ./words
-            tag: serious/wordsmith:words
+            tag: wugui9/wordsmith-words
           - name: web
             context: ./web
-            tag: serious/wordsmith:web
+            tag: wugui9/wordsmith-web
 
     steps:
       - name: Checkout repository
