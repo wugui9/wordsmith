@@ -1,12 +1,12 @@
-name: "Build & Push Wordsmith Images (PR labeled)"
+name: Build & Push Wordsmith Images
 
 on:
+  push:
   pull_request:
     types: [labeled]
 
 jobs:
   build-and-push:
-    if: github.event.action == 'labeled' && github.event.label.name == 'build-images'
     runs-on: ubuntu-latest
 
     strategy:
@@ -14,17 +14,25 @@ jobs:
         include:
           - name: db
             context: ./db
-            tag: serious/wordsmith:db
+            tag: wugui9/wordsmith-db
           - name: words
             context: ./words
-            tag: serious/wordsmith:words
+            tag: wugui9/wordsmith-words
           - name: web
             context: ./web
-            tag: serious/wordsmith:web
+            tag: wugui9/wordsmith-web
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  
+      - name: Debug - list repo files
+        run: |
+          echo "===== WORKING DIRECTORY ====="
+          pwd
+          echo "===== FILE STRUCTURE ====="
+          ls -R
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -42,3 +50,4 @@ jobs:
           file: ${{ matrix.context }}/Dockerfile
           push: true
           tags: ${{ matrix.tag }}
+          no-cache: true   
